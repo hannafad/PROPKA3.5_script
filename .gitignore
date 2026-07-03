@@ -3,9 +3,6 @@
 __pycache__/
 *.pyc
 
-# Local config (not tracked yet — will be added in a later commit)
-config.yaml
-
 # Data: don't commit structures or generated reports
 input_files/*.pdb
 output_files/*.pka

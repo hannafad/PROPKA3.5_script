@@ -26,4 +26,19 @@ uv pip install -r requirements.txt
    **SUMMARY OF THIS PREDICTION** section for predicted pKa per residue.
 
 See [`docs/PROPKA.md`](docs/PROPKA.md) for what PROPKA does, why hydrogens don't
-matter, and how to interpret the output.
+matter, and how to interpret the output, and
+[`docs/CLI_FLAGS.md`](docs/CLI_FLAGS.md) for the available PROPKA3 flags (pH,
+reference state, chain selection, …) and how to add them to the script.
+
+## References / Citations
+
+Please cite these references in publications:
+
+- Søndergaard, Chresten R., Mats H. M. Olsson, Michał Rostkowski, and Jan H.
+  Jensen. "Improved Treatment of Ligands and Coupling Effects in Empirical
+  Calculation and Rationalization of pKa Values." *Journal of Chemical Theory
+  and Computation* 7, no. 7 (2011): 2284–2295.
+- Olsson, Mats H. M., Chresten R. Søndergaard, Michał Rostkowski, and Jan H.
+  Jensen. "PROPKA3: Consistent Treatment of Internal and Surface Residues in
+  Empirical pKa Predictions." *Journal of Chemical Theory and Computation* 7,
+  no. 2 (2011): 525–537.
