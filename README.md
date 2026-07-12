@@ -31,9 +31,16 @@ uv pip install -r requirements.txt
 
 ### Choosing which residues appear in the CSV
 
-`config.yaml` controls the per-residue pKa columns. Leave `positions: []` to
-include every titratable residue, or list residue numbers to compare only those
-sites across structures:
+`config.yaml` controls the per-residue pKa columns. It is not tracked in git —
+copy the template once and edit your local copy:
+
+```sh
+cp config.yaml.template config.yaml
+```
+
+(If `config.yaml` is absent the script still runs, defaulting to all residues.)
+Leave `positions: []` to include every titratable residue, or list residue
+numbers to compare only those sites across structures:
 
 ```yaml
 residues:
