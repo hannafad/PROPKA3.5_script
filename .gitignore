@@ -6,6 +6,7 @@ __pycache__/
 # Data: don't commit structures or generated reports
 input_files/*.pdb
 output_files/*.pka
+example_files/*
 
 # propka scratch files
 *.propka_input
