@@ -24,12 +24,13 @@ uv pip install -r requirements.txt
 
 3. Read the reports in `output_files/<name>.pka` — see the
    **SUMMARY OF THIS PREDICTION** section for predicted pKa per residue.
-4. Compare structures in `output_files/pka_summary.csv` — one row per input
-   PDB, with the pH of optimum stability and its folding free energy, the full
-   folding-free-energy-vs-pH curve (`dG_pH0`…`dG_pH14`, neutral reference), and
-   a pKa column per selected residue.
+4. Compare structures in the two CSVs, each one row per input PDB:
+   - `output_files/free_energy_summary.csv` — the pH of optimum stability, its
+     folding free energy, and the full folding-free-energy-vs-pH curve
+     (`dG_pH0`…`dG_pH14`, neutral reference).
+   - `output_files/pka_summary.csv` — a pKa column per selected residue.
 
-### Choosing which residues appear in the CSV
+### Choosing which residues appear in the pKa CSV
 
 `config.yaml` controls the per-residue pKa columns. It is not tracked in git —
 copy the template once and edit your local copy:
@@ -48,7 +49,8 @@ residues:
   chains: []                 # restrict to chain IDs, e.g. [A]; [] = all chains
 ```
 
-The free-energy columns are always written regardless of this selection.
+This selection only affects `pka_summary.csv`; `free_energy_summary.csv` is
+always written in full.
 
 See [`docs/PROPKA.md`](docs/PROPKA.md) for what PROPKA does, why hydrogens don't
 matter, and how to interpret the output, and

@@ -4,11 +4,13 @@
 PROPKA predicts per-residue pKa values from heavy-atom geometry, so hydrogens
 in the input PDB are ignored. Each run produces a <name>.pka report.
 
-A combined output_files/pka_summary.csv is also written with one row per input
-structure (so structures are directly comparable), holding:
-  - the folding free energy at optimum stability and the pH it occurs at,
-  - the full folding-free-energy-vs-pH curve (pH 0-14, neutral reference),
-  - a pKa column per residue selected in config.yaml.
+Two CSVs are also written, each with one row per input structure (so structures
+are directly comparable):
+  - output_files/free_energy_summary.csv -- the folding free energy at optimum
+    stability, the pH it occurs at, and the full folding-free-energy-vs-pH curve
+    (pH 0-14, neutral reference).
+  - output_files/pka_summary.csv -- a pKa column per residue selected in
+    config.yaml.
 """
 import csv
 import re
@@ -20,7 +22,8 @@ import yaml
 INPUT_DIR = Path("input_files")
 OUTPUT_DIR = Path("output_files")
 CONFIG_FILE = Path("config.yaml")
-SUMMARY_CSV = OUTPUT_DIR / "pka_summary.csv"
+ENERGY_CSV = OUTPUT_DIR / "free_energy_summary.csv"
+PKA_CSV = OUTPUT_DIR / "pka_summary.csv"
 
 
 def load_config():
@@ -134,18 +137,17 @@ def main():
         print("No structures processed; no CSV written.")
         return
 
-    # Stable column order: integer-pH free-energy points, then residues by chain/number.
+    # Stable column order across structures.
     pH_points = sorted({pH for row in rows for pH in row["dg_curve"] if pH.is_integer()})
     residue_keys = sorted(residue_labels)
 
-    fieldnames = (
+    # Free-energy CSV: optimum-stability pH/dG plus the full dG-vs-pH curve.
+    energy_fields = (
         ["file", "optimal_pH", "optimal_pH_dG_kcal_mol"]
         + [f"dG_pH{int(pH)}" for pH in pH_points]
-        + [residue_labels[key] for key in residue_keys]
     )
-
-    with SUMMARY_CSV.open("w", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+    with ENERGY_CSV.open("w", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=energy_fields)
         writer.writeheader()
         for row in rows:
             record = {
@@ -155,12 +157,21 @@ def main():
             }
             for pH in pH_points:
                 record[f"dG_pH{int(pH)}"] = row["dg_curve"].get(pH)
+            writer.writerow(record)
+
+    # pKa CSV: one pKa column per selected residue.
+    pka_fields = ["file"] + [residue_labels[key] for key in residue_keys]
+    with PKA_CSV.open("w", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=pka_fields)
+        writer.writeheader()
+        for row in rows:
+            record = {"file": row["file"]}
             for key in residue_keys:
                 record[residue_labels[key]] = row["residues"].get(key)
             writer.writerow(record)
 
-    print(f"\nWrote {SUMMARY_CSV} ({len(rows)} structures, "
-          f"{len(residue_keys)} residue columns).")
+    print(f"\nWrote {ENERGY_CSV} and {PKA_CSV} "
+          f"({len(rows)} structures, {len(residue_keys)} residue columns).")
 
 
 if __name__ == "__main__":
