@@ -1,0 +1,19 @@
+# Config for run_propka.py — controls what lands in output_files/pka_summary.csv.
+#
+# The CSV has one row per input structure so structures are directly comparable.
+# Every row always carries the folding free-energy summary:
+#   - optimal_pH / optimal_pH_dG_kcal_mol  (pH of maximum stability + its dG)
+#   - dG_pH0 .. dG_pH14                     (full folding free-energy vs pH curve)
+#
+# The section below selects which per-residue pKa columns are added.
+
+residues:
+  # Residue positions (numbers) to emit as pKa columns.
+  # Empty list ([]) => include every titratable residue PROPKA reports.
+  positions: []
+  # e.g. to compare only these sites across structures:
+  # positions: [24, 56, 207]
+
+  # Optionally restrict to these chain IDs. Empty ([]) => all chains.
+  chains: []
+  # e.g. chains: [A]

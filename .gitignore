@@ -4,8 +4,9 @@ __pycache__/
 *.pyc
 
 # Data: don't commit structures or generated reports
-input_files/*.pdb
-output_files/*.pka
+config.yaml
+input_files/*
+output_files/*
 example_files/*
 
 # propka scratch files
