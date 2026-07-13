@@ -1,11 +1,8 @@
-# Config for run_propka.py — controls what lands in output_files/pka_summary.csv.
+# Config for run_propka.py. Copy to config.yaml and edit.
 #
-# The CSV has one row per input structure so structures are directly comparable.
-# Every row always carries the folding free-energy summary:
-#   - optimal_pH / optimal_pH_dG_kcal_mol  (pH of maximum stability + its dG)
-#   - dG_pH0 .. dG_pH14                     (full folding free-energy vs pH curve)
-#
-# The section below selects which per-residue pKa columns are added.
+# Every run always writes two CSVs, one row per structure:
+#   - free_energy_summary.csv  (optimal_pH, its dG, and the dG_pH0..14 curve)
+#   - pka_summary.csv          (a pKa column per residue selected below)
 
 residues:
   # Residue positions (numbers) to emit as pKa columns.
@@ -17,3 +14,24 @@ residues:
   # Optionally restrict to these chain IDs. Empty ([]) => all chains.
   chains: []
   # e.g. chains: [A]
+
+# Deeper per-residue analysis. When true, also writes one CSV per selected
+# residue into output_files/residue_pka/, breaking down every factor PROPKA
+# used to build that pKa (desolvation, hydrogen bonds, Coulombic interactions).
+# NOTE: with positions: [] above, this creates a file for EVERY polar residue
+# in the protein. Leave false until you have chosen residues.
+detailed_analysis: false
+
+# PROPKA run options. Set them here (not on the command line) so each run is
+# reproducible and logged from this file alone. null/blank => PROPKA's default.
+propka:
+  pH: 7.0              # pH for stability & summary sections (pKa is pH-independent)
+  reference: neutral   # reference state for stability: neutral | low-pH
+  chain: null          # restrict to a single chain id, e.g. A; null = all chains
+  titrate_only: null   # only these residues titratable, e.g. "A:10,A:11"
+  window: null         # stability-profile pH window as [lo, hi, step]
+  grid: null           # pH grid for stability properties as [lo, hi, step]
+  quiet: false         # suppress PROPKA's non-warning console output
+  # Escape hatch for any other propka3 flag, recorded verbatim, e.g.:
+  # extra_args: ["--log-level", "WARNING"]
+  extra_args: []
